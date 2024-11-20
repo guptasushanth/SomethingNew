@@ -64,8 +64,8 @@ app.post("/webhook", async (req, res) => {
 
 // To test the end-point
 app.get("/", (req, res) => {
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(ip)
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  console.log(ip);
   res.send("Our Server is live");
 });
 
@@ -89,13 +89,21 @@ app.get("/messageHandler", async (req, res) => {
   return res.send("We were ablt to send message through api");
 });
 
-connectDB()
-  .then(() => {
-    console.log("Database Connected");
-  })
-  .catch((err) => {
-    console.log("Error while connecting to the data base");
-  });
+// api call to connect to database
+app.get("/connectToDataBase", async (req, res) => {
+  try {
+    connectDB()
+      .then(() => {
+        console.log("Database Connected");
+      })
+      .catch((err) => {
+        console.log("Error while connecting to the data base");
+      });
+  } catch (error) {
+    console.log(error);
+  }
+  return res.send("We were ablt to send message through api");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

@@ -51,7 +51,7 @@ app.post("/webhook", async (req, res) => {
     });
     try {
       if (messageContent) {
-        messageHandler(messageContent);
+        await messageHandler(messageContent);
       }
     } catch (error) {
       console.log("line 53:", error);

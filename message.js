@@ -25,7 +25,7 @@ const sendTemplateMessage = async () => {
 };
 
 const sendTextMessage = async (message) => {
-  console.log("Inside send text message");
+  console.log("Inside send text message ", message);
   try {
     const response = await axios({
       url: "https://graph.facebook.com/v21.0/518986904622311/messages",

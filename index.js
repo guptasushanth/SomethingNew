@@ -27,25 +27,34 @@ app.get("/webhook", (req, res) => {
 
 // Webhook endpoint for receiving messages
 app.post("/webhook", async (req, res) => {
-  const data = req.body;
-  console.log(data);
-  // Check if the payload contains messages
-  if (data.messages) {
-    data.messages.forEach((message) => {
-      const sender = message.from; // Sender's phone number
-      const userMessage = message.text.body; // User's message
-      console.log(`Message from ${sender}: ${userMessage}`);
-
-      // Process the message or take actions as needed
+  const body = req.body;
+  console.log(JSON.stringify(body, null, 2));
+  let messageContent = "";
+  if (body.object === "whatsapp_business_account") {
+    body.entry.forEach((entry) => {
+      const changes = entry.changes;
+      changes.forEach((change) => {
+        if (change.value.messages) {
+          const messages = change.value.messages;
+          messages.forEach((message) => {
+            console.log("Message received:", message);
+            messageContent = message;
+            // Example: Reply to a text message
+            if (message.type === "text") {
+              console.log("Text message:", message.text.body);
+            }
+          });
+        }
+      });
     });
     try {
       await sendTextMessage();
     } catch (error) {
       console.log(error);
     }
-    res.status(200).send("Message received");
+    res.status(200).send("EVENT_RECEIVED");
   } else {
-    res.status(200).send("No messages received");
+    res.status(404).send("Something Went Wrong");
   }
 });
 

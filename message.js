@@ -39,7 +39,7 @@ const sendTextMessage = async (message) => {
         to: "918309742589",
         type: "text",
         text: {
-          body: message,
+          body: `${message}`,
         },
       }),
     });

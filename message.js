@@ -26,23 +26,27 @@ const sendTemplateMessage = async () => {
 
 const sendTextMessage = async (message) => {
   console.log("Inside send text message");
-  const response = await axios({
-    url: "https://graph.facebook.com/v21.0/518986904622311/messages",
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: "918309742589",
-      type: "text",
-      text: {
-        body: message,
+  try {
+    const response = await axios({
+      url: "https://graph.facebook.com/v21.0/518986904622311/messages",
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    }),
-  });
-  console.log(response.data);
+      data: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: "918309742589",
+        type: "text",
+        text: {
+          body: message,
+        },
+      }),
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 async function sendImageMessage() {

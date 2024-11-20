@@ -64,6 +64,8 @@ app.post("/webhook", async (req, res) => {
 
 // To test the end-point
 app.get("/", (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ip)
   res.send("Our Server is live");
 });
 

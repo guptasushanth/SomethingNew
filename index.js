@@ -11,6 +11,20 @@ const PORT = 5000;
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
+// Webhook verification
+app.get("/webhook", (req, res) => {
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode && token === VERIFY_TOKEN) {
+    console.log("Webhook verified!");
+    res.status(200).send(challenge);
+  } else {
+    res.status(403).send("Forbidden");
+  }
+});
+
 // Webhook endpoint for receiving messages
 app.post("/webhook", async (req, res) => {
   const data = req.body;

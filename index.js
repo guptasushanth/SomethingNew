@@ -1,68 +1,56 @@
 require("dotenv").config();
 const axios = require("axios");
+const { sendTemplateMessage, sendTextMessage } = require("./message.js");
 
-async function sendTemplateMessage() {
-  const response = await axios({
-    url: "https://graph.facebook.com/v21.0/518986904622311/messages",
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: "918309742589",
-      type: "template",
-      template: {
-        name: "hello_world",
-        language: {
-          code: "en_US",
-        },
-      },
-    }),
-  });
-  console.log(response.data);
-}
+const express = require("express");
+const bodyParser = require("body-parser");
 
-async function sendTextMessage() {
-  const response = await axios({
-    url: "https://graph.facebook.com/v21.0/518986904622311/messages",
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: "918309742589",
-      type: "text",
-      text: {
-        body: "This is a text message",
-      },
-    }),
-  });
-  console.log(response.data);
-}
+const app = express();
+const PORT = 5000;
 
-async function sendImageMessage() {
-  const response = await axios({
-    url: "https://graph.facebook.com/v21.0/518986904622311/messages",
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: "918309742589",
-      type: "image",
-      image: {
-        link: "This is a text message",
-        caption: "This is a media message",
-      },
-    }),
-  });
-  console.log(response.data);
-}
-// sendTemplateMessage();
-sendTextMessage();
+// Middleware to parse JSON requests
+app.use(bodyParser.json());
+
+// Webhook endpoint for receiving messages
+app.post("/webhook", async (req, res) => {
+  const data = req.body;
+
+  // Check if the payload contains messages
+  if (data.messages) {
+    data.messages.forEach((message) => {
+      const sender = message.from; // Sender's phone number
+      const userMessage = message.text.body; // User's message
+      console.log(`Message from ${sender}: ${userMessage}`);
+
+      // Process the message or take actions as needed
+    });
+    try {
+      await sendTextMessage();
+    } catch (error) {
+      console.log(error);
+    }
+    res.status(200).send("Message received");
+  } else {
+    res.status(200).send("No messages received");
+  }
+});
+
+// To test the end-point
+app.get("/", (req, res) => {
+  res.send("Our Server is live");
+});
+
+// To check whether we are able to send messagge on Api call
+app.get("/sendTemplateMessage", async (req, res) => {
+  try {
+    await sendTemplateMessage();
+  } catch (error) {
+    console.log(error);
+  }
+  return res.send("We were ablt to send message through api");
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

@@ -89,10 +89,12 @@ app.get("/messageHandler", async (req, res) => {
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-    });
+    console.log("Database Connected");
   })
   .catch((err) => {
     console.log("Error while connecting to the data base");
   });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

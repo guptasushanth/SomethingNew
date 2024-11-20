@@ -28,7 +28,7 @@ app.get("/webhook", (req, res) => {
 // Webhook endpoint for receiving messages
 app.post("/webhook", async (req, res) => {
   const data = req.body;
-
+  console.log(data);
   // Check if the payload contains messages
   if (data.messages) {
     data.messages.forEach((message) => {

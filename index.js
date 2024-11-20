@@ -38,7 +38,7 @@ app.post("/webhook", async (req, res) => {
           const messages = change.value.messages;
           messages.forEach((message) => {
             console.log("Message received:", message);
-            messageContent = message;
+            messageContent = message.text.body;
             // Example: Reply to a text message
             if (message.type === "text") {
               console.log("Text message:", message.text.body);
@@ -48,9 +48,11 @@ app.post("/webhook", async (req, res) => {
       });
     });
     try {
-      await sendTextMessage();
+      if (messageContent) {
+        await sendTextMessage();
+      }
     } catch (error) {
-      console.log(error);
+      console.log("line 53:", error);
     }
     res.status(200).send("EVENT_RECEIVED");
   } else {

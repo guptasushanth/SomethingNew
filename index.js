@@ -1,9 +1,11 @@
 require("dotenv").config();
 const axios = require("axios");
 const { sendTemplateMessage, sendTextMessage } = require("./message.js");
+const { messageHandler } = require("./messageHandler.js");
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const { connectDB } = require("./config/database");
 
 const app = express();
 const PORT = 5000;
@@ -49,7 +51,7 @@ app.post("/webhook", async (req, res) => {
     });
     try {
       if (messageContent) {
-        await sendTextMessage();
+        messageHandler(messageContent);
       }
     } catch (error) {
       console.log("line 53:", error);
@@ -75,7 +77,22 @@ app.get("/sendTemplateMessage", async (req, res) => {
   return res.send("We were ablt to send message through api");
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// To check whether we are able to send messagge on Api call
+app.get("/messageHandler", async (req, res) => {
+  try {
+    await messageHandler(req.body.message);
+  } catch (error) {
+    console.log(error);
+  }
+  return res.send("We were ablt to send message through api");
 });
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Error while connecting to the data base");
+  });

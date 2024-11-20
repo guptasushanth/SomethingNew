@@ -24,7 +24,7 @@ const sendTemplateMessage = async () => {
   console.log(response.data);
 };
 
-const sendTextMessage = async () => {
+const sendTextMessage = async (message) => {
   const response = await axios({
     url: "https://graph.facebook.com/v21.0/518986904622311/messages",
     method: "post",
@@ -37,7 +37,7 @@ const sendTextMessage = async () => {
       to: "918309742589",
       type: "text",
       text: {
-        body: "This is a text message",
+        body: message,
       },
     }),
   });

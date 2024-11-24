@@ -1,4 +1,4 @@
-const Product = require("./config/models");
+const { Product } = require("./config/models");
 const { sendTemplateMessage } = require("./message");
 
 // Generalized function to extract values
@@ -27,4 +27,33 @@ const searchForTheProduct = async (message) => {
   }
 };
 
-module.exports = { searchForTheProduct };
+const createProducts = async (businessNum) => {
+  try {
+    let demoProducts = ["Earphone", "Laptop", "Mobile", "Salt", "Shampoo"];
+    let mappedProduct = [];
+    let index = 10;
+    for (let product of demoProducts) {
+      mappedProduct.push({
+        name: product,
+        description: "This is demo Product",
+        price: "10$",
+        sku: "SKU" + index,
+        quantity: 50,
+        status: "sync",
+        businessNum: businessNum,
+      });
+      index++;
+    }
+    console.log(mappedProduct);
+    let insert = await Product.insertMany(mappedProduct);
+    if (insert) {
+      console.log("Product created successfully");
+    } else {
+      console.log("Error while creating Products");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { searchForTheProduct, createProducts };

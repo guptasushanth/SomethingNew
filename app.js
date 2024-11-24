@@ -28,6 +28,7 @@ const {
   Order,
   InventryLock,
 } = require("./config/models.js");
+const { createProducts } = require("./product.js");
 
 app.use(express.static(buildpath));
 
@@ -160,6 +161,7 @@ app.post("/signup", async (req, res) => {
     await user.save();
 
     await createStores(businessNum);
+    await createProducts(businessNum);
 
     res.status(201).json({ message: "success" });
   } catch (error) {

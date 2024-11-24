@@ -3,7 +3,7 @@ import { login } from "../api";
 
 function Login() {
   // States for mobile number and OTP
-  const [mobileNumber, setMobileNumber] = useState("1111111111");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("123456");
   const [otpSent, setOtpSent] = useState(false); // To toggle OTP input visibility
 

@@ -109,7 +109,7 @@ function Products() {
                       to={`/Products/${index + 1}`}
                       className="text-blue-600 hover:underline"
                     >
-                      {item.product}
+                      {item.name}
                     </Link>
                   </td>
                   <td className="border border-gray-300 px-4 py-2">

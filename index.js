@@ -92,7 +92,7 @@ app.get("/messageHandler", async (req, res) => {
 // api call to connect to database
 app.get("/connectToDataBase", async (req, res) => {
   try {
-    connectDB()
+    await connectDB()
       .then(() => {
         console.log("Database Connected");
       })

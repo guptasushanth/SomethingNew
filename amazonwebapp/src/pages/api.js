@@ -30,7 +30,7 @@ export const login = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.error("GET request failed:", error);
+    console.error("post request failed:", error);
     throw error;
   }
 };
@@ -43,7 +43,7 @@ export const signup = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.error("GET request failed:", error);
+    console.error("post request failed:", error);
     throw error;
   }
 };
@@ -82,4 +82,32 @@ export const order = async () => {
     console.error("GET request failed:", error);
     throw error;
   }
+};
+
+// Api to Create Order
+export const createOrder = async (data) => {
+  let response = { message: "fail" };
+  try {
+    response = await apiClient.post("/createOrder", data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("post request failed:", error);
+  }
+  return response;
+};
+
+// Api to Create Order
+export const confirmShipment = async (data) => {
+  let response = { message: "fail" };
+  try {
+    response = await apiClient.post("/confirmShipment", data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("post request failed:", error);
+  }
+  return response;
 };

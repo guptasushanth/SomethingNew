@@ -1,79 +1,95 @@
 //Most crucial function for this project concepts used are transactions
 //and mongodb works on documentation level locking thus maintaining concurrency and if other document
-//is req mongo can handle concurrently..
+//is requested mongo can handle concurrently.. thus performance is not hendered
+
+const { Product, Order, InventryLock } = require("./config/models");
+const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
+
 const createOrder = async (req, res) => {
   let response = { status: "fail" };
   try {
-    let { businessId, products } = req.body;
+    let { products, platform, orderId } = req.body;
+    let { businessNum } = req.user;
+    if (!orderId) {
+      orderId = uuidv4();
+    }
     if (!products || !Array.isArray(products) || products.length === 0) {
       return res
         .status(400)
         .send({ message: "Invalid request. Products are required." });
     }
 
-    const session = client.startSession();
+    const session = await mongoose.startSession(); // Start a session
+    // session.startTransaction(); // Begin the transaction
+
     let orderCompletion = true;
 
     // Start MongoDB transaction
     await session.withTransaction(async () => {
       // Validate and reserve inventory for each product
-      for (const { product_id, quantity } of products) {
+      for (const { sku, quantity } of products) {
         // Check product stock
-        const product = await products.findOne({ _id: product_id });
-
-        if (!product) {
+        const warehouseProduct = await Product.findOne({ sku, businessNum });
+        console.log(warehouseProduct);
+        if (!warehouseProduct) {
           orderCompletion = false;
-          throw new Error(`Product ${product_id} does not exist.`);
+          throw new Error(`not exist`);
         }
 
         // Calculate reserved inventory
-        const reserved = await inventryLock
-          .aggregate([
-            { $match: { product_id } },
-            {
-              $group: {
-                _id: null,
-                totalReserved: { $sum: "$reservedQuantity" },
-              },
+        const reserved = await InventryLock.aggregate([
+          { $match: { productId: warehouseProduct["_id"].toString() } },
+          {
+            $group: {
+              _id: null,
+              totalReserved: { $sum: "$reservedQuantity" },
             },
-          ])
-          .toArray();
-
+          },
+        ]);
+        console.log(reserved);
         const totalReserved =
           reserved.length > 0 ? reserved[0].totalReserved : 0;
-        const availableStock = product.stock - totalReserved;
+        const availableStock = warehouseProduct.quantity - totalReserved;
 
         if (availableStock < quantity) {
           orderCompletion = false;
-          throw new Error(`Product ${product_id} is out of stock.`);
+          throw new Error(`Product is out of stock.`);
         }
 
         // Reserve inventory
-        await reservedInventoryCollection.insertOne(
-          {
-            product_id,
-            reservedQuantity: quantity,
-            order_id: ObjectId().toString(),
-          },
+        await InventryLock.create(
+          [
+            {
+              productId: warehouseProduct["_id"].toString(),
+              reservedQuantity: quantity,
+              orderId: orderId,
+            },
+          ],
           { session }
         );
       }
     });
 
-    if (reservationSuccessful) {
+    if (orderCompletion) {
+      console.log(products);
       // Finalize order
       const order = {
-        _id: ObjectId(),
-        products,
-        status: "pending", // Set status to pending until fully processed
-        createdAt: new Date(),
+        orderId: orderId,
+        products: products,
+        status: "pending",
+        storeName: platform,
+        businessNum: businessNum,
       };
+      console.log(order);
+      const orderDoc = await Order.create([order]);
 
-      await orders.insertOne(order);
-      res.status(201).send({ message: "Order placed successfully.", order });
+      res.status(201).send({ message: "success", order });
     }
-  } catch (error) {}
-  res.send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Order could not be placeds" });
+  }
 };
 
 module.exports = { createOrder };

@@ -83,20 +83,40 @@ const orderSchema = new mongoose.Schema(
     },
     storeName: {
       type: String,
-      required,
+      required: true,
     },
     businessNum: {
       type: String,
-      required,
+      required: true,
     },
     status: {
       type: String,
-      required,
+      required: true,
     },
-    products: [{ SKU: String, quantity: Number, description: String }],
+    products: [{ sku: String, quantity: Number, description: String }],
   },
   {
     timestamps: true, //Beautifull thing automatically adds createdAt and updatedAt fields and also updates the updatedAt field
+  }
+);
+
+const inventryLock = new mongoose.Schema(
+  {
+    productId: {
+      type: String,
+      required: true,
+    },
+    reservedQuantity: {
+      type: Number,
+      required: true,
+    },
+    orderId: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
   }
 );
 
@@ -104,5 +124,6 @@ const Product = mongoose.model("Product", productSchema);
 const Store = mongoose.model("Store", storeSchema);
 const Business = mongoose.model("Business", businessSchema);
 const Order = mongoose.model("Order", orderSchema);
+const InventryLock = mongoose.model("InventryLock", inventryLock);
 
-module.exports = { Product, Store, Business, Order };
+module.exports = { Product, Store, Business, Order, InventryLock };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { order } from "../api";
+import { confirmShipment, createOrder, order } from "../api";
 
 function OrdersPage() {
   const [isShipmentModalOpen, setIsShipmentModalOpen] = useState(false); // Modal for shipment form
@@ -58,7 +58,7 @@ function OrdersPage() {
         ...prevData,
         products: [
           ...prevData.products,
-          { description: newProduct, id: Date.now() },
+          { sku: newProduct, id: Date.now(), quantity: 1 },
         ],
       }));
       setNewProduct("");
@@ -74,15 +74,21 @@ function OrdersPage() {
   };
 
   // Submit the order and add to orders list
-  const handleSubmitOrder = () => {
-    setOrdersList((prevOrders) => [...prevOrders, orderData]);
-    setOrderData({
-      orderId: "",
-      customerName: "",
-      platform: "Shopify",
-      priority: "High",
-      products: [],
-    });
+  const handleSubmitOrder = async () => {
+    // First Create Order Which check whether order can be made
+    let orderConfirmation = await createOrder(orderData);
+    console.log(orderConfirmation);
+    if (orderConfirmation.message != "success") {
+      alert("Order Could not be placed");
+    } else {
+      setOrderData({
+        customerName: "",
+        platform: "Shopify",
+        priority: "High",
+        products: [],
+      });
+      setOrdersList((prevOrders) => [...prevOrders, orderConfirmation.order]);
+    }
     toggleModal();
   };
   // Handle shipment modal visibility
@@ -100,8 +106,9 @@ function OrdersPage() {
   };
 
   // Submit shipment data
-  const handleSubmitShipment = () => {
+  const handleSubmitShipment = async () => {
     // Close the modal and show a toast message
+    let confirm = await confirmShipment({ orderId: selectedOrderId });
     toggleShipmentModal();
     setToastMessage("Sent for shipment"); // Set toast message
     setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
@@ -232,7 +239,7 @@ function OrdersPage() {
                 </p>
                 <ul>
                   {order.products.map((product) => (
-                    <li key={product.SKU}>{product.description}</li>
+                    <li key={product.sku}>{product.description}</li>
                   ))}
                 </ul>
               </div>
@@ -279,7 +286,7 @@ function OrdersPage() {
                 type="text"
                 value={newProduct}
                 onChange={(e) => setNewProduct(e.target.value)}
-                placeholder="Enter Product SKU/Description"
+                placeholder="Enter Product SKU"
                 className="input input-bordered w-full mb-2"
               />
               <button onClick={handleAddProduct} className="btn btn-outline">
@@ -292,7 +299,7 @@ function OrdersPage() {
               <h4 className="font-semibold mb-2">Added Products</h4>
               {orderData.products.map((product, i) => (
                 <div key={product.id} className="flex items-center space-x-2">
-                  <p>{product.description}</p>
+                  <p>{product.sku}</p>
                   <button
                     onClick={() => handleRemoveProduct(product.id)}
                     className="btn btn-outline btn-danger"

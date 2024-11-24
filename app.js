@@ -41,7 +41,7 @@ app.use(passport.session());
 // Enable CORS for all routes and allow requests from localhost:3001
 app.use(
   cors({
-    origin: ["http://localhost:3001", "http://localhost:3002"],
+    origin: ["http://localhost:5000"],
     credentials: true, // If you need to include cookies or authorization headers
   })
 );

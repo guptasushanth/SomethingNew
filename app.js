@@ -41,7 +41,7 @@ app.use(passport.session());
 // Enable CORS for all routes and allow requests from localhost:3001
 app.use(
   cors({
-    origin: ["http://localhost:5000"],
+    origin: "http://ec2-65-2-120-70.ap-south-1.compute.amazonaws.com:5000",
     credentials: true, // If you need to include cookies or authorization headers
   })
 );

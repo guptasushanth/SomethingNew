@@ -2,7 +2,19 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
+const cors = require("cors");
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Enable CORS for all routes and allow requests from localhost:3001
+app.use(
+  cors({
+    origin: "*", // Allow your front-end's origin
+    // methods: ["GET", "POST", "OPTIONS"], // Allow HTTP methods
+    // allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    credentials: true, // If you need to include cookies or authorization headers
+  })
+);
 
 // Simulated user database
 const USERS = { user1: { id: 1, name: "John Doe", email: "john@example.com" } };
@@ -12,14 +24,29 @@ const CODES = {};
 const TOKENS = {};
 
 // Authorization endpoint
-app.get("/authorize", (req, res) => {
+app.get("/authorize/mystore", (req, res) => {
+  console.log("i came here");
   const { client_id, redirect_uri, state } = req.query;
 
   // Simulate a login page (hardcoded user)
   const authCode = "mockAuthCode123"; // In a real setup, generate a unique code
   CODES[authCode] = USERS["user1"]; // Associate code with the user
 
-  res.redirect(`${redirect_uri}?code=${authCode}&state=${state}`);
+  // res.redirect(`${redirect_uri}?code=${authCode}&state=${state}`);
+  // Render an HTML page with a button
+  res.send(`
+    <html>
+      <body>
+        <h1>Authorize Application</h1>
+        <p>Do you want to grant access to this application?</p>
+        <form action="${redirect_uri}" method="GET">
+          <input type="hidden" name="code" value="${authCode}" />
+          <input type="hidden" name="state" value="${state}" />
+          <button type="submit">Authorize</button>
+        </form>
+      </body>
+    </html>
+  `);
 });
 
 // app.get("/");

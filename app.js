@@ -2,7 +2,10 @@ require("dotenv").config();
 const axios = require("axios");
 require("./auth.js");
 const jwt = require("jsonwebtoken");
-
+const path = require("path");
+const _dirname = path.dirname("");
+const buildpath = path.join(_dirname, "amazonwebapp/build");
+console.log(buildpath);
 const passport = require("passport");
 const OAuth2Strategy = require("passport-oauth2");
 const session = require("express-session");
@@ -25,6 +28,8 @@ const {
   Order,
   InventryLock,
 } = require("./config/models.js");
+
+app.use(express.static(buildpath));
 
 // Middleware to handle sessions
 app.use(
@@ -295,6 +300,11 @@ app.post("/confirmShipment", async (req, res) => {
     console.log(error);
     res.status(401).json({ message: "Invalid token" });
   }
+});
+
+// Catch-all route (Serve React)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "amazonwebapp/build", "index.html"));
 });
 
 app.listen(PORT, () => {

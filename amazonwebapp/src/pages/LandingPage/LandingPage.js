@@ -74,7 +74,9 @@ function LandingPage() {
             </li>
           </ul>
           <div className="flex items-center space-x-2">
-            <span className="hidden sm:block">Profile</span>
+            <button className="btn btn-text">
+              <Link to="/MyStore"> My Store</Link>
+            </button>
           </div>
         </div>
       </nav>

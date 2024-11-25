@@ -8,6 +8,7 @@ import ProductDetails from "./pages/Products/ProductDetails.js";
 import Login from "./pages/Login/login.js";
 import React from "react";
 import Signup from "./pages/Login/signup.js";
+import MyStore from "./pages/MyStore/MyStore.js";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/Orders" element={<OrdersPage />} />
         <Route path="/Products" element={<Products />} />
         <Route path="/Products/:id" element={<ProductDetails />} />
+        <Route path="/MyStore" element={<MyStore />} />
       </Routes>
     </Router>
   );

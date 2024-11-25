@@ -29,14 +29,20 @@ const searchForTheProduct = async (message) => {
 
 const createProducts = async (businessNum) => {
   try {
-    let demoProducts = ["Earphone", "Laptop", "Mobile", "Salt", "Shampoo"];
+    let demoProducts = [
+      "Wireless Earbuds, IPX8",
+      "AirPods Max",
+      "Bose BT Earphones",
+      "Salt",
+      "Shampoo",
+    ];
     let mappedProduct = [];
     let index = 10;
     for (let product of demoProducts) {
       mappedProduct.push({
         name: product,
         description: "This is demo Product",
-        price: "10$",
+        price: "₹10",
         sku: "SKU" + index,
         quantity: 50,
         status: "sync",

@@ -11,6 +11,7 @@ const apiClient = axios.create({
 
 // Api to connect Store
 export const connectStore = async (data) => {
+  let response = { messasge: "fail" };
   try {
     const response = await apiClient.post("/connectStore", data, {
       withCredentials: true,
@@ -18,8 +19,9 @@ export const connectStore = async (data) => {
     return response.data;
   } catch (error) {
     console.error("GET request failed:", error);
-    throw error;
+    window.location.href = "/";
   }
+  return response;
 };
 
 // Api to login
@@ -32,6 +34,7 @@ export const login = async (data) => {
     return response.data;
   } catch (error) {
     console.error("post request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -46,6 +49,7 @@ export const signup = async (data) => {
     return response.data;
   } catch (error) {
     console.error("post request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -58,6 +62,7 @@ export const store = async () => {
     return response.data;
   } catch (error) {
     console.error("GET request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -72,6 +77,7 @@ export const product = async () => {
     return response.data;
   } catch (error) {
     console.error("GET request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -85,6 +91,7 @@ export const order = async () => {
     return response.data;
   } catch (error) {
     console.error("GET request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -99,6 +106,7 @@ export const createOrder = async (data) => {
     return response.data;
   } catch (error) {
     console.error("post request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };
@@ -113,6 +121,7 @@ export const confirmShipment = async (data) => {
     return response.data;
   } catch (error) {
     console.error("post request failed:", error);
+    window.location.href = "/";
   }
   return response;
 };

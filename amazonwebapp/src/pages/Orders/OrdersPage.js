@@ -11,11 +11,13 @@ function OrdersPage() {
   }); // Shipment data
   // States to manage modal visibility and order data
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("new");
   const [orderData, setOrderData] = useState({
     customerName: "",
     platform: "Shopify",
     priority: "High",
     products: [],
+    status: "pending",
   });
 
   // State for adding a new product to the order
@@ -96,7 +98,7 @@ function OrdersPage() {
         platform: "Shopify",
         priority: "High",
         products: [],
-        quantity: 0,
+        status: "pending",
       });
       setOrdersList((prevOrders) => [...prevOrders, orderConfirmation.order]);
     }
@@ -118,6 +120,13 @@ function OrdersPage() {
 
   // Submit shipment data
   const handleSubmitShipment = async () => {
+    setOrdersList((prevOrders) =>
+      prevOrders.map((order) =>
+        order.orderId === selectedOrderId
+          ? { ...order, status: "sent for shipment" }
+          : order
+      )
+    );
     // Close the modal and show a toast message
     let confirm = await confirmShipment({ orderId: selectedOrderId });
     toggleShipmentModal();
@@ -136,6 +145,10 @@ function OrdersPage() {
       setSelectedOrderId(orderId);
     }
   };
+  const filteredOrders =
+    activeTab === "new"
+      ? ordersList.filter((order) => order.status === "pending")
+      : ordersList.filter((order) => order.status === "sent for shipment");
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -183,42 +196,64 @@ function OrdersPage() {
       {/* Body */}
       <div className="p-4 space-y-4">
         {/* Tab Menu */}
-        <div className="flex space-x-4 border-b pb-2">
-          <button className="tab tab-active border-b-2 border-blue-600">
-            New
-          </button>
-          <button className="tab">History</button>
+        <div className="p-4 space-y-4">
+          <div className="flex space-x-4 border-b pb-2">
+            <button
+              onClick={() => setActiveTab("new")}
+              className={`tab ${
+                activeTab === "new"
+                  ? "tab-active border-b-2 border-blue-500"
+                  : ""
+              }`}
+            >
+              New
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`tab ${
+                activeTab === "history"
+                  ? "tab-active border-b-2 border-blue-500"
+                  : ""
+              }`}
+            >
+              History
+            </button>
+          </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end space-x-2">
-          <button className="btn btn-text">Cancel</button>
-          <button
-            onClick={toggleShipmentModal}
-            className={`btn btn-primary ${
-              selectedOrderId ? "" : "btn-disabled text-white"
-            }`}
-            disabled={!selectedOrderId}
-            style={{
-              color: !selectedOrderId ? "white" : undefined, // Apply white text color only when disabled
-            }}
-          >
-            Confirm Shipment
-          </button>
-        </div>
+        {activeTab === "new" && (
+          <div className="flex justify-end space-x-2">
+            <button className="btn btn-text">Cancel</button>
+            <button
+              onClick={toggleShipmentModal}
+              className={`btn btn-primary ${
+                selectedOrderId ? "" : "btn-disabled text-white"
+              }`}
+              disabled={!selectedOrderId}
+              style={{
+                color: !selectedOrderId ? "white" : undefined, // Apply white text color only when disabled
+              }}
+            >
+              Confirm Shipment
+            </button>
+          </div>
+        )}
 
         {/* Order Cards */}
         <div className="space-y-4">
-          {ordersList.map((order, index) => (
+          {filteredOrders.map((order, index) => (
             <div
               key={index}
               className="card bg-white shadow p-4 flex justify-between items-start"
             >
-              <input
-                type="checkbox"
-                checked={selectedOrderId === order.orderId}
-                onChange={() => handleCheckboxChange(order.orderId)}
-              />
+              {activeTab === "new" && (
+                <input
+                  type="checkbox"
+                  checked={selectedOrderId === order.orderId}
+                  onChange={() => handleCheckboxChange(order.orderId)}
+                />
+              )}
               <div>
                 <h3 className="font-semibold">Order ID: #{order.orderId}</h3>
                 <p className="text-gray-600">

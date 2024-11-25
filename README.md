@@ -8,19 +8,22 @@ The folder is organized,each serving a distinct purpose.
 ---
 
 ## Folder Structure
-1. **`server`**: 
+1. **`main`**: 
    - This folder contains the backend service.
    - Built with Node.js and Express.js, it handles API requests, business logic, and database interactions.
    - Start the server to serve API endpoints.
-
-2. **`ui`**: 
+  
+1. **`order | product | store | shipment`**: 
+   - This folder contains the backend service for their respective service to provide modularity.
+    
+2. **`amazonwebapp`**: 
    - Contains the frontend of the application.
    - Built with a modern JavaScript framework (React).
    - Responsible for rendering the user interface and consuming the backend APIs.
 
-3. **`application`**:
-   - This folder holds the build files of the UI for deployment.
-   - Contains the optimized and production-ready static files for the frontend.
+3. **`whatsappApplication`**:
+   - This folder simulates whatsapp Extension feature
+   - it has api's and webhooks to cater the communication
 
 ---
 

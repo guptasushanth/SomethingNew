@@ -106,7 +106,11 @@ function LandingPage() {
                 <h4 className="text-xl font-semibold">{store.name}</h4>
                 <button
                   onClick={() => handleConnectClick(store.name)}
-                  className="btn btn-primary mt-4 w-full bg-blue-600 hover:bg-blue-700"
+                  className={`btn btn-primary mt-4 w-full ${
+                    store.connStatus == "connected"
+                      ? "bg-green-600 hover:bg-green-700"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  }`}
                 >
                   {store.connStatus == "connected" ? "Connected" : "Connect"}
                 </button>

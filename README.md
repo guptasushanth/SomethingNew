@@ -21,7 +21,7 @@ The folder is organized,each serving a distinct purpose.
    - Built with a modern JavaScript framework (React).
    - Responsible for rendering the user interface and consuming the backend APIs.
 
-3. **`whatsappApplication`**:
+3. **`whatsappIntegration`**:
    - This folder simulates whatsapp Extension feature
    - it has api's and webhooks to cater the communication
 

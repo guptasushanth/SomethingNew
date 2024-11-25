@@ -88,7 +88,7 @@ function App() {
     if (orderConfirmation.message != "success") {
       alert(orderConfirmation.message);
     } else {
-      window.location.href = "/Orders";
+      window.location.href = "/Home";
     }
     // Simulate sending data to the server
     //console.log("Sending the following order data to the server:", orderData);

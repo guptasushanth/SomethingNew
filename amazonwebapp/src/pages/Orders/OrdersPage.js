@@ -148,7 +148,7 @@ function OrdersPage() {
   const filteredOrders =
     activeTab === "new"
       ? ordersList.filter((order) => order.status === "pending")
-      : ordersList.filter((order) => order.status === "sent for shipment");
+      : ordersList.filter((order) => order.status != "pending");
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -163,7 +163,7 @@ function OrdersPage() {
               <Link to="/Products">Products</Link>
             </li>
             <li className="hover:underline cursor-pointer">
-              <Link to="/OrdersPage">Orders</Link>
+              <Link to="/Orders">Orders</Link>
             </li>
           </ul>
         </div>

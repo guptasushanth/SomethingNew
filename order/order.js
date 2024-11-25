@@ -36,6 +36,7 @@ const createOrder = async (req, res) => {
         const warehouseProduct = await Product.findOne({ sku, businessNum });
         if (!warehouseProduct) {
           orderCompletion = false;
+          response["message"] = "Given SKU does not exist";
           throw new Error(`not exist`);
         }
 
@@ -55,6 +56,7 @@ const createOrder = async (req, res) => {
 
         if (availableStock < quantity) {
           orderCompletion = false;
+          response["message"] = "Product is out of stock";
           throw new Error(`Product is out of stock.`);
         }
 
@@ -87,7 +89,7 @@ const createOrder = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Order could not be placeds" });
+    return res.status(200).json(response);
   }
 };
 

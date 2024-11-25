@@ -35,7 +35,6 @@ function Products() {
             <li className="hover:underline cursor-pointer">
               <Link to="/Orders">Orders</Link>
             </li>
-            <li className="hover:underline cursor-pointer">Returns</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>

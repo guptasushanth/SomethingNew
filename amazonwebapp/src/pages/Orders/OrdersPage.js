@@ -91,7 +91,7 @@ function OrdersPage() {
     let orderConfirmation = await createOrder(orderData);
     console.log(orderConfirmation);
     if (orderConfirmation.message != "success") {
-      alert("Order Could not be placed");
+      alert(orderConfirmation.message);
     } else {
       setOrderData({
         customerName: "",
@@ -165,7 +165,6 @@ function OrdersPage() {
             <li className="hover:underline cursor-pointer">
               <Link to="/OrdersPage">Orders</Link>
             </li>
-            <li className="hover:underline cursor-pointer">Returns</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>

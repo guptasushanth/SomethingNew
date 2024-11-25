@@ -5,7 +5,7 @@ const { messageHandler } = require("./messageHandler.js");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const { connectDB } = require("./config/database");
+const { connectDB } = require("../config/database.js");
 
 const app = express();
 const PORT = 5000;
@@ -77,34 +77,4 @@ app.get("/sendTemplateMessage", async (req, res) => {
     console.log(error);
   }
   return res.send("We were ablt to send message through api");
-});
-
-// To check whether we are able to send messagge on Api call
-app.get("/messageHandler", async (req, res) => {
-  try {
-    await messageHandler(req.body.message);
-  } catch (error) {
-    console.log(error);
-  }
-  return res.send("We were ablt to send message through api");
-});
-
-// api call to connect to database
-app.get("/connectToDataBase", async (req, res) => {
-  try {
-    await connectDB()
-      .then(() => {
-        console.log("Database Connected");
-      })
-      .catch((err) => {
-        console.log("Error while connecting to the data base");
-      });
-  } catch (error) {
-    console.log(error);
-  }
-  return res.send("We were ablt to send message through api");
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
 });

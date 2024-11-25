@@ -20,16 +20,15 @@ function ProductDetails() {
           <h1 className="text-2xl font-bold">Amazonment</h1>
           <ul className="flex space-x-4">
             <li className="hover:underline cursor-pointer">
-              <Link to="/">Home</Link>
+              <Link to="/Home">Home</Link>
             </li>
             <li className="hover:underline cursor-pointer">
               <Link to="/Products">Products</Link>
             </li>
             <li className="hover:underline cursor-pointer">
-              <Link to="/OrdersPage">Orders</Link>
+              <Link to="/Orders">Orders</Link>
             </li>
             <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>

@@ -29,7 +29,6 @@ function OrdersPage() {
     const fetchData = async () => {
       try {
         const response = await order();
-        console.log(response.data);
         setOrdersList(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -38,6 +37,17 @@ function OrdersPage() {
 
     fetchData(); // Call the function
   }, []);
+
+  const handleQuantityChange = (productId, increment) => {
+    setOrderData((prevData) => ({
+      ...prevData,
+      products: prevData.products.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: Math.max(1, product.quantity + increment) }
+          : product
+      ),
+    }));
+  };
 
   // Toggle Modal
   const toggleModal = () => {
@@ -86,6 +96,7 @@ function OrdersPage() {
         platform: "Shopify",
         priority: "High",
         products: [],
+        quantity: 0,
       });
       setOrdersList((prevOrders) => [...prevOrders, orderConfirmation.order]);
     }
@@ -133,7 +144,7 @@ function OrdersPage() {
           <h1 className="text-2xl font-bold">Amazonment</h1>
           <ul className="flex space-x-4">
             <li className="hover:underline cursor-pointer">
-              <Link to="/">Home</Link>
+              <Link to="/Home">Home</Link>
             </li>
             <li className="hover:underline cursor-pointer">
               <Link to="/Products">Products</Link>
@@ -142,7 +153,6 @@ function OrdersPage() {
               <Link to="/OrdersPage">Orders</Link>
             </li>
             <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>
@@ -158,12 +168,11 @@ function OrdersPage() {
           <div>
             <h1 className="text-2xl font-bold">Orders</h1>
             <p className="text-gray-600">
-              <span className="font-semibold">3 Orders</span> | Updated a few
-              seconds ago
+              <span className="font-semibold">{ordersList.length} Orders</span>{" "}
+              | Updated a few seconds ago
             </p>
           </div>
           <div className="flex space-x-2">
-            <button className="btn btn-outline">Sync</button>
             <button onClick={toggleModal} className="btn btn-outline">
               Create
             </button>
@@ -173,27 +182,6 @@ function OrdersPage() {
 
       {/* Body */}
       <div className="p-4 space-y-4">
-        {/* Search and Filters */}
-        <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search Orders"
-            className="input input-bordered w-full"
-          />
-          <select className="select select-bordered">
-            <option>Order List</option>
-            <option>Recently Added</option>
-          </select>
-          <select className="select select-bordered">
-            <option>Platform: All</option>
-            <option>Shopify</option>
-          </select>
-          <select className="select select-bordered">
-            <option>Priority: High</option>
-            <option>Priority: Low</option>
-          </select>
-        </div>
-
         {/* Tab Menu */}
         <div className="flex space-x-4 border-b pb-2">
           <button className="tab tab-active border-b-2 border-blue-600">
@@ -239,7 +227,9 @@ function OrdersPage() {
                 </p>
                 <ul>
                   {order.products.map((product) => (
-                    <li key={product.sku}>{product.description}</li>
+                    <li key={product.id}>
+                      {product.sku} - Quantity: {product.quantity}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -297,16 +287,36 @@ function OrdersPage() {
             {/* Product List */}
             <div className="mt-4">
               <h4 className="font-semibold mb-2">Added Products</h4>
-              {orderData.products.map((product, i) => (
-                <div key={product.id} className="flex items-center space-x-2">
+              {orderData.products.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-between space-x-4 mb-2"
+                >
                   <p>{product.sku}</p>
+                  <div className="flex items-center space-x-2">
+                    {/* Quantity Stepper */}
+                    <button
+                      onClick={() => handleQuantityChange(product.id, -1)}
+                      className="btn btn-outline"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-bold">
+                      {product.quantity}
+                    </span>
+                    <button
+                      onClick={() => handleQuantityChange(product.id, 1)}
+                      className="btn btn-outline"
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
                     onClick={() => handleRemoveProduct(product.id)}
                     className="btn btn-outline btn-danger"
                   >
                     Remove
                   </button>
-                  <button className="btn btn-outline">Preview</button>
                 </div>
               ))}
             </div>

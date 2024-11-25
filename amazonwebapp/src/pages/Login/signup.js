@@ -11,11 +11,10 @@ function Signup() {
     event.preventDefault();
     let data = { businessNum: mobileNumber, businessName: name };
     let response = await signup(data);
-    if (response.message == "success") {
-      window.location.href = "/";
-    } else {
+    if (response.message != "success") {
       alert("User already exists");
     }
+    window.location.href = "/";
   };
 
   return (

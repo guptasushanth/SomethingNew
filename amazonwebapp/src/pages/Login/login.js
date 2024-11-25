@@ -33,6 +33,7 @@ function Login() {
         window.location.href = "/Home";
       } else {
         alert("User not found. Please signup.");
+        window.location.href = "/Signup";
       }
     } else {
       alert("Invalid OTP. Please try again.");

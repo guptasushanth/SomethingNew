@@ -1,5 +1,5 @@
-const { Product } = require("./config/models");
-const { sendTemplateMessage } = require("./message");
+const { Product } = require("./model");
+const { sendTemplateMessage } = require("../whatsAppIntegration/message");
 
 // Generalized function to extract values
 function extractValue(input, key) {
@@ -44,7 +44,6 @@ const createProducts = async (businessNum) => {
       });
       index++;
     }
-    console.log(mappedProduct);
     let insert = await Product.insertMany(mappedProduct);
     if (insert) {
       console.log("Product created successfully");
@@ -56,4 +55,15 @@ const createProducts = async (businessNum) => {
   }
 };
 
-module.exports = { searchForTheProduct, createProducts };
+const getProductList = async (req, res) => {
+  try {
+    let { businessNum } = req.user;
+    let productList = await Product.find({ businessNum: businessNum });
+    res.status(200).json({ data: productList });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+module.exports = { searchForTheProduct, createProducts, getProductList };

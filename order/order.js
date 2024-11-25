@@ -2,7 +2,10 @@
 //and mongodb works on documentation level locking thus maintaining concurrency and if other document
 //is requested mongo can handle concurrently.. thus performance is not hendered
 
-const { Product, Order, InventryLock } = require("./config/models");
+const { InventryLock } = require("../config/models");
+const { Product } = require("../product/model");
+const { Order } = require("./model");
+
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 
@@ -31,7 +34,6 @@ const createOrder = async (req, res) => {
       for (const { sku, quantity } of products) {
         // Check product stock
         const warehouseProduct = await Product.findOne({ sku, businessNum });
-        console.log(warehouseProduct);
         if (!warehouseProduct) {
           orderCompletion = false;
           throw new Error(`not exist`);
@@ -47,7 +49,6 @@ const createOrder = async (req, res) => {
             },
           },
         ]);
-        console.log(reserved);
         const totalReserved =
           reserved.length > 0 ? reserved[0].totalReserved : 0;
         const availableStock = warehouseProduct.quantity - totalReserved;
@@ -72,7 +73,6 @@ const createOrder = async (req, res) => {
     });
 
     if (orderCompletion) {
-      console.log(products);
       // Finalize order
       const order = {
         orderId: orderId,
@@ -81,7 +81,6 @@ const createOrder = async (req, res) => {
         storeName: platform,
         businessNum: businessNum,
       };
-      console.log(order);
       const orderDoc = await Order.create([order]);
 
       res.status(201).send({ message: "success", order });
@@ -92,4 +91,14 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = { createOrder };
+const getOrderList = async (req, res) => {
+  try {
+    const { businessNum } = req.user;
+    let orderList = await Order.find({ businessNum: businessNum });
+    res.status(200).json({ data: orderList });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+module.exports = { createOrder, getOrderList };

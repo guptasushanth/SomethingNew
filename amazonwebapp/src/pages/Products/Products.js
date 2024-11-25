@@ -27,16 +27,15 @@ function Products() {
           <h1 className="text-2xl font-bold">Amazonment</h1>
           <ul className="flex space-x-4">
             <li className="hover:underline cursor-pointer">
-              <Link to="/">Home</Link>
+              <Link to="/Home">Home</Link>
             </li>
             <li className="hover:underline cursor-pointer">
               <Link to="/Products">Products</Link>
             </li>
             <li className="hover:underline cursor-pointer">
-              <Link to="/OrdersPage">Orders</Link>
+              <Link to="/Orders">Orders</Link>
             </li>
             <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>
@@ -53,40 +52,17 @@ function Products() {
           <div>
             <h1 className="text-2xl font-bold">Products</h1>
             <p className="text-gray-600">
-              <span className="font-semibold">15 Orders</span> | Updated a few
-              seconds ago
+              <span className="font-semibold">
+                {productList.length} Products
+              </span>{" "}
+              | Updated a few seconds ago
             </p>
-          </div>
-          <div className="flex space-x-2">
-            <button className="btn btn-outline">Sync</button>
-            <button className="btn btn-outline">Create</button>
           </div>
         </div>
       </header>
 
       {/* Body */}
       <div className="p-4 space-y-4">
-        {/* Search and Filters */}
-        <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search Orders"
-            className="input input-bordered w-full"
-          />
-          <select className="select select-bordered">
-            <option>Order List:Recently Added</option>
-            <option>Order List:Alphabetical</option>
-          </select>
-          <select className="select select-bordered">
-            <option>Platform: All</option>
-            <option>Platform: Shopify</option>
-          </select>
-          <select className="select select-bordered">
-            <option>Priority: High</option>
-            <option>Priority: Low</option>
-          </select>
-        </div>
-
         {/* Table */}
         <div className="container mx-auto p-4">
           <h1 className="text-xl font-bold mb-4">Products Table</h1>
@@ -98,7 +74,6 @@ function Products() {
                 <th className="border border-gray-300 px-4 py-2">Price</th>
                 <th className="border border-gray-300 px-4 py-2">Quantity</th>
                 <th className="border border-gray-300 px-4 py-2">Status</th>
-                <th className="border border-gray-300 px-4 py-2">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -128,12 +103,6 @@ function Products() {
                   >
                     {item.status}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button className="btn btn-sm btn-outline mr-2">
-                      Edit
-                    </button>
-                    <button className="btn btn-sm btn-error">Delete</button>
-                  </td>{" "}
                 </tr>
               ))}
             </tbody>

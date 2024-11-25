@@ -1,6 +1,6 @@
 const { sendTextMessage } = require("./message");
 const { searchForTheProduct } = require("./product");
-const { confirmShipment } = require("./mcf_services/mcf");
+const { confirmShipment } = require("../mcf_services/mcf");
 
 const messageHandler = async (message) => {
   try {

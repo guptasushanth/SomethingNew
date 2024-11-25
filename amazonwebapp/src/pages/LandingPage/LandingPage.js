@@ -64,22 +64,18 @@ function LandingPage() {
           <h1 className="text-2xl font-bold">Amazonment</h1>
           <ul className="flex space-x-4">
             <li className="hover:underline cursor-pointer">
-              <Link to="/">Home</Link>
+              <Link to="/Home">Home</Link>
             </li>
             <li className="hover:underline cursor-pointer">
               <Link to="/Products">Products</Link>
             </li>
             <li className="hover:underline cursor-pointer">
-              <Link to="/OrdersPage">Orders</Link>
+              <Link to="/Orders">Orders</Link>
             </li>
             <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
           </ul>
           <div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-800">
-              <i className="fas fa-user"></i>
-            </div>
           </div>
         </div>
       </nav>
@@ -128,7 +124,7 @@ function LandingPage() {
               Amazon Multi-Channel Fulfillment
             </h4>
             <button className="btn btn-primary mt-4 w-full bg-green-600 hover:bg-green-700">
-              Connect
+              Connected
             </button>
           </div>
         </div>

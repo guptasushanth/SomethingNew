@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 
-const sendTemplateMessage = async () => {
+const sendTemplateMessage = async (number) => {
   const response = await axios({
     url: "https://graph.facebook.com/v21.0/518986904622311/messages",
     method: "post",
@@ -11,7 +11,7 @@ const sendTemplateMessage = async () => {
     },
     data: JSON.stringify({
       messaging_product: "whatsapp",
-      to: "918309742589",
+      to: `${number}`,
       type: "template",
       template: {
         name: "hello_world",
@@ -24,7 +24,7 @@ const sendTemplateMessage = async () => {
   console.log(response.data);
 };
 
-const sendTextMessage = async (message) => {
+const sendTextMessage = async (message, number) => {
   console.log("Inside send text message ", message);
   try {
     const response = await axios({
@@ -36,7 +36,7 @@ const sendTextMessage = async (message) => {
       },
       data: JSON.stringify({
         messaging_product: "whatsapp",
-        to: "918309742589",
+        to: `${number}`,
         type: "text",
         text: {
           body: `${message}`,
